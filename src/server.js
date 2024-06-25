@@ -11,8 +11,8 @@ server.use(express.json());
 server.use("/api", routes);
 
 
-server.listen(8000 , () => {
-  console.log(`Server is running on port ${8000}`);
+server.listen(8001 , () => {
+  console.log(`Server is running on port ${8001}`);
 })
 
 module.exports = server;
