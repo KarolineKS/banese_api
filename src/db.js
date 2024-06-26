@@ -1,19 +1,19 @@
-const mysql = require('mysql2');
+const { Client } = require('pg');
 
-const connection = mysql.createConnection({
+const client = new Client({
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || 'Tugui1006.',
   database: process.env.DB_DATABASE || 'db_registro_users',
-  port: process.env.DB_PORT || '3307',
+  port: 5432,
 });
 
-connection.connect((err) => {
+client.connect((err) => {
   if (err) {
-    console.log(err);
+    console.error('Erro ao conectar ao banco de dados:', err.stack);
   } else {
     console.log('Conectado ao banco de dados 🎲');
   }
 });
 
-module.exports = connection;
+module.exports = client;

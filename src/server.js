@@ -13,8 +13,8 @@ server.use(express.json());
 server.use("/api", routes);
 
 
-server.listen( port, (req, res) => {
-  res.json({message: "Api rodando..."});
-})
+server.listen(port, () => {
+  console.log(`Api rodando na porta ${port}...`);
+});
 
 module.exports = server;
