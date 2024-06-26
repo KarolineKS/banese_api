@@ -1,20 +1,15 @@
-require('dotenv').config({path: '.env'});
-
+require('dotenv').config({ path: '.env' });
 const express = require('express');
 const cors = require('cors');
-
-const port = process.env.PORT ;
-
 const routes = require('./routes');
-const server = express();
 
-server.use(cors());
-server.use(express.json());
-server.use("/api", routes);
+const app = express();
+const port = process.env.PORT || 3000;
 
+app.use(cors());
+app.use(express.json());
+app.use('/api', routes);
 
-server.listen(port, () => {
-  console.log(`Api rodando na porta ${port}...`);
+app.listen(port, () => {
+  console.log(`API rodando na porta ${port}...`);
 });
-
-module.exports = server;

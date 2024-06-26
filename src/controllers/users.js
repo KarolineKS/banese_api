@@ -1,45 +1,41 @@
-const db = require('../db');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
-const getAll = (req, res) => {
-  db.query('SELECT * FROM users', (error, result) => {
-    if (error) {
-      console.log(error);
-      res.status(500).json({ message: 'Server error' });
-    } else {
-      res.status(200).json(result);
-    }
-  });
+const getAll = async (req, res) => {
+  try {
+    const users = await prisma.user.findMany();
+    res.status(200).json(users);
+  } catch (error) {
+    console.error('Erro ao buscar usuários:', error);
+    res.status(500).json({ message: 'Erro no servidor' });
+  }
 };
 
-const login = function(req, res) {
+const login = async (req, res) => {
   const { cpf, password } = req.body;
-  db.query(
-      `INSERT INTO users (cpf, password) VALUES ('${cpf}', '${password}')`,
-      (error, result) => {
-          if (error) {
-              console.log(error);
-              res.status(500).json({ message: 'Server error' });
-          } else {
-              res.status(200).json({ message: 'Usuário inserido com sucesso!' });
-          }
-      }
-  );
+  try {
+    const newUser = await prisma.user.create({
+      data: { cpf, password },
+    });
+    res.status(200).json({ message: 'Usuário inserido com sucesso!' });
+  } catch (error) {
+    console.error('Erro ao inserir usuário:', error);
+    res.status(500).json({ message: 'Erro no servidor' });
+  }
 };
 
-const updatePasswordNumber = function(req, res) {
+const updatePasswordNumber = async (req, res) => {
   const { cpf, passwordNumber } = req.body;
-  db.query(
-      `UPDATE users SET password_number = ? WHERE cpf = ?`,
-      [passwordNumber, cpf],
-      (error, result) => {
-          if (error) {
-              console.log(error);
-              res.status(500).json({ message: 'Server error' });
-          } else {
-              res.status(200).json({ message: 'Senha Numérica atualizada com sucesso!' });
-          }
-      }
-  );
+  try {
+    const user = await prisma.user.update({
+      where: { cpf },
+      data: { passwordNumber },
+    });
+    res.status(200).json({ message: 'Senha Numérica atualizada com sucesso!' });
+  } catch (error) {
+    console.error('Erro ao atualizar senha numérica:', error);
+    res.status(500).json({ message: 'Erro no servidor' });
+  }
 };
 
 module.exports = {
